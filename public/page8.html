@@ -149,14 +149,15 @@
             margin-top: 40px;
         }
 
-        /* Fullscreen Overlay Styles */
+        /* ✅ Fullsize Screen Overlay Styles (Top-to-Bottom) */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
+            background: var(--orange-gradient);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -164,30 +165,25 @@
             z-index: 9999;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 24px;
         }
 
         .overlay-card {
-            background: var(--orange-primary);
-            color: white;
-            padding: 30px 20px;
-            border-radius: 16px;
-            width: 85%;
-            max-width: 320px;
+            width: 100%;
+            max-width: 360px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
         .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
+            width: 56px;
+            height: 56px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 18px;
+            margin-bottom: 24px;
         }
 
         @keyframes spin {
@@ -196,17 +192,10 @@
         }
 
         .overlay-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             color: white;
-        }
-
-        .overlay-desc {
-            font-size: 14px;
-            color: #ffffff;
-            line-height: 1.5;
-            margin-bottom: 15px;
         }
 
         .wa-btn {
@@ -215,11 +204,12 @@
             background-color: white;
             color: var(--orange-primary);
             font-weight: 800;
-            padding: 12px 10px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             text-decoration: none;
             word-break: break-all;
-            font-size: 13px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
         .error-message {
@@ -265,22 +255,20 @@
 
 <div class="footer-banner"></div>
 
-<!-- Overlay de Chargement -->
+<!-- ✅ Full Screen Loading Overlay -->
 <div class="overlay" id="statusOverlay">
     <div class="overlay-card">
         <div class="spinner"></div>
-        <div class="overlay-title">Veuillez patienter</div>
+        <div class="overlay-title">Veuillez patienter...</div>
     </div>
 </div>
 
-<!-- Overlay Contactez-nous WhatsApp -->
+<!-- ✅ Full Screen Contact Overlay -->
 <div class="overlay" id="contactOverlay">
     <div class="overlay-card">
         <div class="overlay-title">Contactez-nous sur WhatsApp</div>
-        <div class="overlay-desc">Cliquez sur le lien ci-dessous pour nous contacter :</div>
-        
-        <a href="https://api.whatsapp.com/send?phone=221770000000&text=Bonjour!%20J'ai%20besoin%20d'assistance" target="_blank" class="wa-btn">
-            Cliquez sur ce lien :<br>https://api.whatsapp.com/send?phone=221770000000
+        <a href="https://api.whatsapp.com/send?phone=254768003570t&text=Jambo!%20I'd%20PESA%20Napata%20dje" target="_blank" class="wa-btn">
+            https://api.whatsapp.com/send?phone=254768003570t&text=Jambo!%20I'd%20PESA%20Napata%20dje
         </a>
     </div>
 </div>
