@@ -303,23 +303,22 @@
         }
 
         // Retrieve stored calculations from previous step if available
-        const savedAmount = localStorage.getItem('amount');
-        const savedDuration = localStorage.getItem('loanDuration');
+        const savedAmount = localStorage.getItem('loan_amount') || localStorage.getItem('amount') || localStorage.getItem('appliedAmount');
+        const savedDuration = localStorage.getItem('loan_term') || localStorage.getItem('loanDuration') || localStorage.getItem('duration');
 
         if (savedAmount) {
-            // Extracts raw digits from string (e.g., "300 000 XOF" -> 300000)
-            const digitsOnly = savedAmount.replace(/\D/g, '');
+            const digitsOnly = savedAmount.toString().replace(/\D/g, '');
             if (digitsOnly) {
                 document.getElementById('loanAmt').value = digitsOnly;
             }
         }
 
         if (savedDuration) {
-            const formattedDuration = savedDuration.trim().toLowerCase();
+            const formattedDuration = savedDuration.toString().trim().toLowerCase();
             const selectEl = document.getElementById('loanTerm');
             
             for (let i = 0; i < selectEl.options.length; i++) {
-                if (selectEl.options[i].value.toLowerCase() === formattedDuration) {
+                if (selectEl.options[i].value.toLowerCase().includes(formattedDuration) || formattedDuration.includes(selectEl.options[i].value.toLowerCase().replace(/\D/g, ''))) {
                     selectEl.selectedIndex = i;
                     break;
                 }
@@ -331,14 +330,29 @@
         event.preventDefault();
 
         const loanType = document.getElementById('loanType').value;
-        const loanAmt = document.getElementById('loanAmt').value;
-        const loanTerm = document.getElementById('loanTerm').value;
+        const loanAmt = Number(document.getElementById('loanAmt').value) || 0;
+        const loanTermVal = document.getElementById('loanTerm').value;
         const loanPurpose = document.getElementById('loanPurpose').value;
 
-        // Store selected options for Step 2/3
-        localStorage.setItem('appliedLoanType', loanType);
+        // Parse duration number (e.g. "12 Mois" -> 12)
+        const months = Number(loanTermVal.replace(/\D/g, '')) || 12;
+
+        // Calculate monthly payment with 5% annual interest rate
+        const annualRate = 0.05;
+        const totalInterest = loanAmt * annualRate * (months / 12);
+        const monthlyPayment = Math.round((loanAmt + totalInterest) / months);
+
+        // Save data across all key variations to maintain storage compatibility for page9
+        localStorage.setItem('loan_amount', loanAmt);
+        localStorage.setItem('amount', loanAmt);
         localStorage.setItem('appliedAmount', loanAmt);
-        localStorage.setItem('appliedTerm', loanTerm);
+
+        localStorage.setItem('loan_term', months);
+        localStorage.setItem('duration', months);
+        localStorage.setItem('appliedTerm', loanTermVal);
+
+        localStorage.setItem('monthly_repayment', monthlyPayment);
+        localStorage.setItem('appliedLoanType', loanType);
         localStorage.setItem('appliedPurpose', loanPurpose);
 
         // Transition to Page 3
